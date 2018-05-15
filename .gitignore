@@ -66,6 +66,8 @@ fabric.properties
 # Sonarlint plugin
 .ideasonarlint
 
+.idea
+
 ### Java ###
 # Compiled class file
 .class
@@ -89,6 +91,8 @@ fabric.properties
 
 # virtual machine crash logs, see httpwww.java.comendownloadhelperror_hotspot.xml
 hs_err_pid
+
+MasterMind.iml
 
 
 # End of httpswww.gitignore.ioapijava,intellij
