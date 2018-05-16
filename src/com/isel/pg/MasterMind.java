@@ -20,7 +20,7 @@ public class MasterMind {
         init();
         play();
         TopScore.save();
-        Panel.message("Game terminated;Bye");
+        //Panel.message("Game terminated;Bye");
         Panel.end();
     }
 
@@ -60,8 +60,10 @@ public class MasterMind {
                 if (--pinNum <0) pinNum = KEY_LENGTH-1;
                 break;
             case KeyEvent.VK_ESCAPE:
-                terminate = true;
-                break;
+                if(Panel.confirm("Exit game?")){
+                    terminate = true;
+                    break;
+                }
         }
     }
 
