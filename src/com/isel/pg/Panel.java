@@ -46,6 +46,27 @@ public class Panel {
     }
 
     /**
+     * Draws a rectangle only with spaces with a background color.
+     * @param lin Top lin of the rectangle.
+     * @param col Left column of the rectangle.
+     * @param height Number of lines.
+     * @param width Number of columns.
+     * @param color background color of rectangle.
+     */
+    public static void clearRectFirst(int lin, int col, int height, int width, int color) {
+        setBackground(color);
+        for(int i=0 ; i<height ; ++i) {
+            cursor(lin + i, col);
+            if(i == 0)
+                printRepeat(' ', width);
+            else
+                printRepeatFirst(i, width);
+        }
+        cursor(lin + height, col);
+        printRepeat(' ', width);
+    }
+
+    /**
      * Draws the basics of board. Call only once per game.
      */
     public static void printBoard() {
@@ -53,7 +74,8 @@ public class Panel {
         printSecretLine();
         for (int i = TRIES; i > 0; i--)
             printTryLine(i);
-        clearRect(BAR_LINE, COLS+1, MasterMind.MAX_COLORS+2, 3, BROWN);
+        //clearRect(BAR_LINE, COLS+1, MasterMind.MAX_COLORS+2, 3, BROWN);
+        clearRectFirst(BAR_LINE, COLS+1, MasterMind.MAX_COLORS+2, 3, BROWN);
     }
 
     private static void printTryLine(int n) {
@@ -80,6 +102,19 @@ public class Panel {
 
     private static void printRepeat(char c, int times) {
         for (; times>0 ; times--) print(c);
+    }
+
+    private static void printRepeatFirst(int i, int times) {
+        for (; times>0 ; times--) {
+            if (times == 2) {
+                setBackground(i == 1 ? LIGHT_GRAY : BROWN);
+                setForeground(COLORS[i-1]);
+                print(PIN);
+            } else {
+                setBackground(BROWN);
+                print(' ');
+            }
+        }
     }
 
     public static final int NO_COLOR = -1;

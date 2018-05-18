@@ -64,6 +64,10 @@ public class MasterMind {
                     terminate = true;
                     break;
                 }
+            case KeyEvent.VK_DOWN:
+                break;
+            case KeyEvent.VK_UP:
+                break;
         }
     }
 
