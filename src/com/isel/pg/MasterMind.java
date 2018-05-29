@@ -1,6 +1,7 @@
 package com.isel.pg;
 
 import isel.leic.pg.Console;
+import javafx.scene.layout.Pane;
 
 import java.awt.event.KeyEvent;
 
@@ -13,6 +14,7 @@ public class MasterMind {
     private static int tryNum;      // Number of current try (1..MAX_TRIES)
     private static int pinNum = 0;  // Number of current pin in current try
     private static boolean terminate = false;
+    private static int numColor = 0; //Number of the current color
 
     public static void main(String[] args) {
         Panel.init();
@@ -53,20 +55,24 @@ public class MasterMind {
 
     private static void processKey(int key) {
         switch (key) {
+            case KeyEvent.VK_ESCAPE:
+                if(Panel.confirm("Exit game?")){
+                    terminate = true;
+                    break;
+                }
             case KeyEvent.VK_RIGHT:
                 if (++pinNum == KEY_LENGTH) pinNum =0;
                 break;
             case KeyEvent.VK_LEFT:
                 if (--pinNum <0) pinNum = KEY_LENGTH-1;
                 break;
-            case KeyEvent.VK_ESCAPE:
-                if(Panel.confirm("Exit game?")){
-                    terminate = true;
-                    break;
-                }
             case KeyEvent.VK_DOWN:
+                if(++numColor >= MAX_COLORS) numColor = 0;
+                Panel.printRectColors(Panel.BAR_LINE, Panel.COLS+1, MAX_COLORS+2, 3, Panel.COLORS[numColor]);
                 break;
             case KeyEvent.VK_UP:
+                if (--numColor <0) numColor = MAX_COLORS-1;
+                Panel.printRectColors(Panel.BAR_LINE, Panel.COLS+1, MAX_COLORS+2, 3, Panel.COLORS[numColor]);
                 break;
         }
     }

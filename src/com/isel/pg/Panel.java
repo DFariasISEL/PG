@@ -46,24 +46,22 @@ public class Panel {
     }
 
     /**
-     * Draws a rectangle only with spaces with a background color.
+     * Draws a rectangle with the available colors.
      * @param lin Top lin of the rectangle.
      * @param col Left column of the rectangle.
      * @param height Number of lines.
      * @param width Number of columns.
      * @param color background color of rectangle.
      */
-    public static void clearRectFirst(int lin, int col, int height, int width, int color) {
-        setBackground(color);
-        for(int i=0 ; i<height ; ++i) {
+    public static void printRectColors(int lin, int col, int height, int width, int color) {
+        setBackground(BROWN);
+        for(int i=0 ; i<=height ; ++i) {
             cursor(lin + i, col);
-            if(i == 0)
+            if(i == 0 || i == height)
                 printRepeat(' ', width);
             else
-                printRepeatFirst(i, width);
+                printRepeatColors(i, width, color);
         }
-        cursor(lin + height, col);
-        printRepeat(' ', width);
     }
 
     /**
@@ -75,7 +73,8 @@ public class Panel {
         for (int i = TRIES; i > 0; i--)
             printTryLine(i);
         //clearRect(BAR_LINE, COLS+1, MasterMind.MAX_COLORS+2, 3, BROWN);
-        clearRectFirst(BAR_LINE, COLS+1, MasterMind.MAX_COLORS+2, 3, BROWN);
+        //To print Rect with Colors
+        printRectColors(BAR_LINE, COLS+1, MasterMind.MAX_COLORS+2, 3, NO_COLOR);
     }
 
     private static void printTryLine(int n) {
@@ -104,11 +103,11 @@ public class Panel {
         for (; times>0 ; times--) print(c);
     }
 
-    private static void printRepeatFirst(int i, int times) {
+    private static void printRepeatColors(int i, int times, int color) {
         for (; times>0 ; times--) {
             if (times == 2) {
                 setBackground(i == 1 ? LIGHT_GRAY : BROWN);
-                setForeground(COLORS[i-1]);
+                setForeground(color == -1 ? COLORS[i-1] : COLORS[color]);
                 print(PIN);
             } else {
                 setBackground(BROWN);
