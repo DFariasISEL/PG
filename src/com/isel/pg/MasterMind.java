@@ -67,12 +67,12 @@ public class MasterMind {
                 if (--pinNum <0) pinNum = KEY_LENGTH-1;
                 break;
             case KeyEvent.VK_DOWN:
-                if(++numColor >= MAX_COLORS) numColor = 0;
-                Panel.printRectColors(Panel.BAR_LINE, Panel.COLS+1, MAX_COLORS+2, 3, Panel.COLORS[numColor]);
+                if(++numColor > MAX_COLORS) numColor = 0;
+                Panel.printRectColors(Panel.BAR_LINE, Panel.COLS+1, MAX_COLORS+2, 3, numColor);
                 break;
             case KeyEvent.VK_UP:
-                if (--numColor <0) numColor = MAX_COLORS-1;
-                Panel.printRectColors(Panel.BAR_LINE, Panel.COLS+1, MAX_COLORS+2, 3, Panel.COLORS[numColor]);
+                if (--numColor <0) numColor = MAX_COLORS;
+                Panel.printRectColors(Panel.BAR_LINE, Panel.COLS+1, MAX_COLORS+2, 3, numColor);
                 break;
         }
     }

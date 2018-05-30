@@ -106,8 +106,8 @@ public class Panel {
     private static void printRepeatColors(int i, int times, int color) {
         for (; times>0 ; times--) {
             if (times == 2) {
-                setBackground(i == 1 ? LIGHT_GRAY : BROWN);
-                setForeground(color == -1 ? COLORS[i-1] : COLORS[color]);
+                setBackground((i == 1 && color == -1) || (i == color+1) ? LIGHT_GRAY : BROWN);
+                setForeground(COLORS[i-1]);
                 print(PIN);
             } else {
                 setBackground(BROWN);
