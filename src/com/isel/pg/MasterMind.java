@@ -11,6 +11,7 @@ public class MasterMind {
     public static final int MAX_COLORS = 5;  // KEY_LENGTH..8
 
     public static int[] currentTry = new int[KEY_LENGTH];  // Pins of current try
+    public static int[] secretKey = new int[KEY_LENGTH];  // Secret key with the same size of current try
     private static int tryNum;      // Number of current try (1..MAX_TRIES)
     public static int pinNum = 0;  // Number of current pin in current try
     private static boolean terminate = false;
@@ -35,7 +36,11 @@ public class MasterMind {
     private static void startGame() {
         tryNum=1;
         for (int i = 0; i <KEY_LENGTH; i++)
+        {
             currentTry[i] = Panel.NO_COLOR;
+            secretKey[i] = Panel.NO_COLOR;
+        }
+        Panel.generateSecretKey(secretKey, MAX_COLORS);
         Panel.printBoard();
         Panel.printEqualColors(false);
         TopScore.printScores();

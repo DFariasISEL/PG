@@ -69,6 +69,7 @@ public class Panel {
      */
     public static void printBoard() {
         clearRect(0,0,LINES,COLS,BROWN);
+
         printSecretLine();
         for (int i = TRIES; i > 0; i--)
             printTryLine(i);
@@ -167,6 +168,29 @@ public class Panel {
             color(COLORS[secretKey[i]],BLACK);
             print(PIN);
         }
+    }
+
+    public static void generateSecretKey(int[] secretKey, int maxColors){
+        int i = 0, randomNum;
+        boolean result = false;
+        while(i < secretKey.length && secretKey[i] == -1){
+            randomNum = (int)(Math.random() * maxColors);
+            for(int j = 0; j< secretKey.length; j++){
+                if(secretKey[j] != randomNum)
+                    result = true;
+                else{
+                    result = false;
+                    break;
+                }
+            }
+            if(result){
+                secretKey[i] = randomNum;
+                i++;
+            }
+        }
+
+
+
     }
 
     /**
