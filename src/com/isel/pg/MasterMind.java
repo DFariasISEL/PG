@@ -16,6 +16,7 @@ public class MasterMind {
     public static int pinNum = 0;  // Number of current pin in current try
     private static boolean terminate = false;
     private static int ColorSelected = 0; //Number of the current color
+    private static int swap, exact;
 
     public static void main(String[] args) {
         Panel.init();
@@ -88,6 +89,52 @@ public class MasterMind {
                 break;
             case KeyEvent.VK_DELETE:
                 currentTry[pinNum] = Panel.NO_COLOR;
+            case KeyEvent.VK_ENTER:
+                if(currentTry[0] != Panel.NO_COLOR &&
+                        currentTry[1] != Panel.NO_COLOR &&
+                        currentTry[2] != Panel.NO_COLOR &&
+                        currentTry[3] != Panel.NO_COLOR)
+                {
+                    validateTry();
+                    if(exact == 4){
+                        //end game with victory
+                    }else if(tryNum != MAX_TRIES){
+                        Panel.printResult(tryNum, exact, swap);
+                        Panel.printTryPinsLast(tryNum, currentTry);
+                        tryNum++;
+                        for (int i = 0; i <KEY_LENGTH; i++)
+                            currentTry[i] = Panel.NO_COLOR;
+                    }
+                    else{
+                        Panel.printResult(tryNum, exact, swap);
+                        Panel.printTryPinsLast(tryNum++, currentTry);
+                        for (int i = 0; i <KEY_LENGTH; i++)
+                            currentTry[i] = Panel.NO_COLOR;
+                        Panel.printRectColors(Panel.BAR_LINE, Panel.COLS+1, MAX_COLORS+2, 3, ColorSelected, pinNum, currentTry);
+                        Panel.ValidateAttempt(secretKey);
+                        if(Panel.confirm("New game")){
+                            init();
+                        }
+                        else{
+                            terminate = true;
+                            break;
+                        }
+                    }
+                }
+
+        }
+    }
+
+    private static void validateTry(){
+        exact = 0;
+        swap = 0;
+        for(int i=0; i<secretKey.length; i++){
+            for(int j=0; j<currentTry.length; j++){
+                if (secretKey[i] == currentTry[j] && i == j)
+                    exact++;
+                else if(secretKey[i] == currentTry[j] && i != j)
+                    swap++;
+            }
         }
     }
 

@@ -158,6 +158,15 @@ public class Panel {
         }
     }
 
+    public static void printTryPinsLast(int tryNum, int[] pinColors) {
+        for (int i = 0; i < KEY_LEN; i++) {
+            cursor(LINES - tryNum * 2, NUM_SPACES + 1 + i * 2);
+            setBackground(DARK_GRAY);
+            setForeground(COLORS[pinColors[i]]);
+            print(PIN);
+        }
+    }
+
     /**
      * Show the secret key
      * @param secretKey Array of pin colors [0..MAX_COLORS]
@@ -321,6 +330,11 @@ public class Panel {
         String value = Console.nextLine(maxField);
         printLegend();
         return value;
+    }
+
+    public static void ValidateAttempt(int[] secretKey){
+        showKey(secretKey);
+        message("You lose");
     }
 
 }
