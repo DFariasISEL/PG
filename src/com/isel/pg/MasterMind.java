@@ -1,7 +1,6 @@
 package com.isel.pg;
 
 import isel.leic.pg.Console;
-import javafx.scene.layout.Pane;
 
 import java.awt.event.KeyEvent;
 
@@ -11,7 +10,7 @@ public class MasterMind {
     public static final int MAX_COLORS = 5;  // KEY_LENGTH..8
 
     public static int[] currentTry = new int[KEY_LENGTH];  // Pins of current try
-    public static int[] secretKey = new int[KEY_LENGTH];  // Secret key with the same size of current try
+    private static int[] secretKey = new int[KEY_LENGTH];  // Secret key with the same size of current try
     private static int tryNum;      // Number of current try (1..MAX_TRIES)
     public static int pinNum = 0;  // Number of current pin in current try
     private static boolean terminate = false;

@@ -69,7 +69,6 @@ public class Panel {
      */
     public static void printBoard() {
         clearRect(0,0,LINES,COLS,BROWN);
-
         printSecretLine();
         for (int i = TRIES; i > 0; i--)
             printTryLine(i);
@@ -171,7 +170,7 @@ public class Panel {
      * Show the secret key
      * @param secretKey Array of pin colors [0..MAX_COLORS]
      */
-    public static void showKey(int[] secretKey) {
+    private static void showKey(int[] secretKey) {
         for (int i = 0; i < KEY_LEN; i++) {
             cursor(1, NUM_SPACES + 1 + i * 2);
             color(COLORS[secretKey[i]],BLACK);
@@ -301,11 +300,11 @@ public class Panel {
     }
 
     /**
-     * Write a messsage in legend area.
+     * Write a message in legend area.
      * The message remains for 4 seconds or until a key is pressed.
      * @param msg The message to write. Each ';' forces a change of line.
      */
-    public static void message(String msg) {
+    private static void message(String msg) {
         printMessage(msg);
         int key;
         do {
