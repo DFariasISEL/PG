@@ -10,11 +10,11 @@ public class MasterMind {
     public static final int KEY_LENGTH = 4;  // 1..6
     public static final int MAX_COLORS = 5;  // KEY_LENGTH..8
 
-    private static int[] currentTry = new int[KEY_LENGTH];  // Pins of current try
+    public static int[] currentTry = new int[KEY_LENGTH];  // Pins of current try
     private static int tryNum;      // Number of current try (1..MAX_TRIES)
-    private static int pinNum = 0;  // Number of current pin in current try
+    public static int pinNum = 0;  // Number of current pin in current try
     private static boolean terminate = false;
-    private static int numColor = 0; //Number of the current color
+    private static int ColorSelected = 0; //Number of the current color
 
     public static void main(String[] args) {
         Panel.init();
@@ -48,6 +48,7 @@ public class MasterMind {
             if (key>0) {
                 processKey(key);
                 Panel.printTryPins(tryNum, pinNum, currentTry);
+                Panel.printRectColors(Panel.BAR_LINE, Panel.COLS+1, MAX_COLORS+2, 3, ColorSelected, pinNum, currentTry);
                 Console.waitKeyReleased(key);
             }
         } while( !terminate );
@@ -67,13 +68,21 @@ public class MasterMind {
                 if (--pinNum <0) pinNum = KEY_LENGTH-1;
                 break;
             case KeyEvent.VK_DOWN:
-                if(++numColor > MAX_COLORS) numColor = 0;
-                Panel.printRectColors(Panel.BAR_LINE, Panel.COLS+1, MAX_COLORS+2, 3, numColor);
+                if(++ColorSelected > MAX_COLORS) ColorSelected = 0;
                 break;
             case KeyEvent.VK_UP:
-                if (--numColor <0) numColor = MAX_COLORS;
-                Panel.printRectColors(Panel.BAR_LINE, Panel.COLS+1, MAX_COLORS+2, 3, numColor);
+                if (--ColorSelected <0) ColorSelected = MAX_COLORS;
                 break;
+            case KeyEvent.VK_SPACE:
+                if(currentTry[pinNum] == -1 &&
+                        currentTry[0] != ColorSelected &&
+                        currentTry[1] != ColorSelected &&
+                        currentTry[2] != ColorSelected &&
+                        currentTry[3] != ColorSelected)
+                    currentTry[pinNum] = ColorSelected;
+                break;
+            case KeyEvent.VK_DELETE:
+                currentTry[pinNum] = Panel.NO_COLOR;
         }
     }
 

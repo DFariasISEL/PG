@@ -51,16 +51,16 @@ public class Panel {
      * @param col Left column of the rectangle.
      * @param height Number of lines.
      * @param width Number of columns.
-     * @param color background color of rectangle.
+     * @param color background color of rectangle to be selected.
      */
-    public static void printRectColors(int lin, int col, int height, int width, int color) {
+    public static void printRectColors(int lin, int col, int height, int width, int color, int pinSelected, int[] currentTry) {
         setBackground(BROWN);
         for(int i=0 ; i<=height ; ++i) {
             cursor(lin + i, col);
             if(i == 0 || i == height)
                 printRepeat(' ', width);
             else
-                printRepeatColors(i, width, color);
+                printRepeatWithColors(i, width, color, pinSelected, currentTry);
         }
     }
 
@@ -74,7 +74,7 @@ public class Panel {
             printTryLine(i);
         //clearRect(BAR_LINE, COLS+1, MasterMind.MAX_COLORS+2, 3, BROWN);
         //To print Rect with Colors
-        printRectColors(BAR_LINE, COLS+1, MasterMind.MAX_COLORS+2, 3, NO_COLOR);
+        printRectColors(BAR_LINE, COLS+1, MasterMind.MAX_COLORS+2, 3, NO_COLOR, MasterMind.pinNum, MasterMind.currentTry);
     }
 
     private static void printTryLine(int n) {
@@ -103,17 +103,35 @@ public class Panel {
         for (; times>0 ; times--) print(c);
     }
 
-    private static void printRepeatColors(int i, int times, int color) {
+    private static void printRepeatWithColors(int line, int times, int color, int pinSelected, int[] currentTry) {
         for (; times>0 ; times--) {
             if (times == 2) {
-                setBackground((i == 1 && color == -1) || (i == color+1) ? LIGHT_GRAY : BROWN);
-                setForeground(COLORS[i-1]);
-                print(PIN);
+                setBackground((line == 1 && color == NO_COLOR) || (line == color+1) ? LIGHT_GRAY : BROWN);
+                if(isColorFilled(currentTry, line))
+                {
+                    setForeground(WHITE);
+                    print('O');
+                }
+                else
+                {
+                    setForeground(COLORS[line - 1]);
+                    print(PIN);
+                }
             } else {
                 setBackground(BROWN);
                 print(' ');
             }
         }
+    }
+
+    public static boolean isColorFilled(int[] currentTry, int line)
+    {
+        boolean result = false;
+        for(int i=0;i<currentTry.length;i++)
+        {
+            if(currentTry[i] != NO_COLOR && currentTry[i] == line-1) result=true;
+        }
+        return result;
     }
 
     public static final int NO_COLOR = -1;
