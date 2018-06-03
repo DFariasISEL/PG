@@ -53,14 +53,14 @@ public class Panel {
      * @param width Number of columns.
      * @param color background color of rectangle to be selected.
      */
-    public static void printRectColors(int lin, int col, int height, int width, int color, int pinSelected, int[] currentTry) {
+    public static void printRectColors(int lin, int col, int height, int width, int color, int[] currentTry) {
         setBackground(BROWN);
         for(int i=0 ; i<=height ; ++i) {
             cursor(lin + i, col);
             if(i == 0 || i == height)
                 printRepeat(' ', width);
             else
-                printRepeatWithColors(i, width, color, pinSelected, currentTry);
+                printRepeatWithColors(i, width, color, currentTry);
         }
     }
 
@@ -74,7 +74,7 @@ public class Panel {
             printTryLine(i);
         //clearRect(BAR_LINE, COLS+1, MasterMind.MAX_COLORS+2, 3, BROWN);
         //To print Rect with Colors
-        printRectColors(BAR_LINE, COLS+1, MasterMind.MAX_COLORS+2, 3, NO_COLOR, MasterMind.pinNum, MasterMind.currentTry);
+        printRectColors(BAR_LINE, COLS+1, MasterMind.MAX_COLORS+2, 3, NO_COLOR, MasterMind.currentTry);
     }
 
     private static void printTryLine(int n) {
@@ -103,7 +103,7 @@ public class Panel {
         for (; times>0 ; times--) print(c);
     }
 
-    private static void printRepeatWithColors(int line, int times, int color, int pinSelected, int[] currentTry) {
+    private static void printRepeatWithColors(int line, int times, int color, int[] currentTry) {
         for (; times>0 ; times--) {
             if (times == 2) {
                 setBackground((line == 1 && color == NO_COLOR) || (line == color+1) ? LIGHT_GRAY : BROWN);
@@ -337,7 +337,7 @@ public class Panel {
         for (int i = 0; i <MasterMind.KEY_LENGTH; i++)
             currentTry[i] = Panel.NO_PIN;
         if(continuePlaying) {
-            printRectColors(Panel.BAR_LINE, Panel.COLS + 1, MasterMind.MAX_COLORS+ 2, 3, MasterMind.ColorSelected, MasterMind.pinNum, currentTry);
+            printRectColors(Panel.BAR_LINE, Panel.COLS + 1, MasterMind.MAX_COLORS+ 2, 3, MasterMind.ColorSelected, currentTry);
             showKey(secretKey);
             message(message);
         }

@@ -12,15 +12,15 @@ public class MasterMind {
     public static int[] currentTry = new int[KEY_LENGTH];  // Pins of current try
     private static int[] secretKey = new int[KEY_LENGTH];  // Secret key with the same size of current try
     private static int tryNum;      // Number of current try (1..MAX_TRIES)
-    public static int pinNum = 0;  // Number of current pin in current try
+    private static int pinNum = 0;  // Number of current pin in current try
     private static boolean terminate = false;
     public static int ColorSelected = 0; //Number of the current color
     private static int swap, exact;
-    private static boolean eqColors = false;
 
     public static void main(String[] args) {
         Panel.init();
         TopScore.load();
+        boolean eqColors = false;
         init(eqColors);
         play();
         TopScore.save();
@@ -54,7 +54,7 @@ public class MasterMind {
             if (key>0) {
                 processKey(key);
                 Panel.printTryPins(tryNum, pinNum, currentTry);
-                Panel.printRectColors(Panel.BAR_LINE, Panel.COLS+1, MAX_COLORS+2, 3, ColorSelected, pinNum, currentTry);
+                Panel.printRectColors(Panel.BAR_LINE, Panel.COLS+1, MAX_COLORS+2, 3, ColorSelected, currentTry);
                 Console.waitKeyReleased(key);
             }
         } while( !terminate );
