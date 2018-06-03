@@ -14,26 +14,27 @@ public class MasterMind {
     private static int tryNum;      // Number of current try (1..MAX_TRIES)
     public static int pinNum = 0;  // Number of current pin in current try
     private static boolean terminate = false;
-    private static int ColorSelected = 0; //Number of the current color
+    public static int ColorSelected = 0; //Number of the current color
     private static int swap, exact;
+    private static boolean eqColors = false;
 
     public static void main(String[] args) {
         Panel.init();
         TopScore.load();
-        init();
+        init(eqColors);
         play();
         TopScore.save();
         //Panel.message("Game terminated;Bye");
         Panel.end();
     }
 
-    private static void init() {
+    private static void init(boolean eqColors) {
         TopScore.printFrame();
         Panel.printLegend();
-        startGame();
+        startGame(eqColors);
     }
 
-    private static void startGame() {
+    private static void startGame(boolean eqColors) {
         tryNum=1;
         for (int i = 0; i <KEY_LENGTH; i++)
         {
@@ -42,7 +43,7 @@ public class MasterMind {
         }
         Panel.generateSecretKey(secretKey, MAX_COLORS);
         Panel.printBoard();
-        Panel.printEqualColors(false);
+        Panel.printEqualColors(eqColors);
         TopScore.printScores();
     }
 
@@ -62,10 +63,8 @@ public class MasterMind {
     private static void processKey(int key) {
         switch (key) {
             case KeyEvent.VK_ESCAPE:
-                if(Panel.confirm("Exit game?")){
-                    terminate = true;
-                    break;
-                }
+                if(Panel.confirm("Exit game?")) terminate = true;
+                break;
             case KeyEvent.VK_RIGHT:
                 if (++pinNum == KEY_LENGTH) pinNum =0;
                 break;
@@ -79,49 +78,84 @@ public class MasterMind {
                 if (--ColorSelected <0) ColorSelected = MAX_COLORS;
                 break;
             case KeyEvent.VK_SPACE:
-                if(currentTry[pinNum] == -1 &&
-                        currentTry[0] != ColorSelected &&
-                        currentTry[1] != ColorSelected &&
-                        currentTry[2] != ColorSelected &&
-                        currentTry[3] != ColorSelected)
-                    currentTry[pinNum] = ColorSelected;
+                if(checkCurrentColor(currentTry, ColorSelected, pinNum)) currentTry[pinNum] = ColorSelected;
                 break;
             case KeyEvent.VK_DELETE:
                 currentTry[pinNum] = Panel.NO_COLOR;
+                break;
             case KeyEvent.VK_ENTER:
-                if(currentTry[0] != Panel.NO_COLOR &&
-                        currentTry[1] != Panel.NO_COLOR &&
-                        currentTry[2] != Panel.NO_COLOR &&
-                        currentTry[3] != Panel.NO_COLOR)
+                if(checkCurrentTry(currentTry))
                 {
                     validateTry();
                     if(exact == 4){
-                        //end game with victory
+                        Panel.validateMove(tryNum, exact, swap, currentTry, true, secretKey, "");
+                        String name = Panel.read("Well done;The score goes to top;Enter your name", 10);
+
+                        Score s = new Score(name, tryNum, 5);
+                        TopScore.addScore(s);
+                        TopScore.printScores();
+                        if(Panel.confirm("New game")){
+                            if(Panel.confirm("With repeated colors"))
+                                init(true);
+                            else
+                                init(false);
+                        }
+                        else
+                            terminate = true;
                     }else if(tryNum != MAX_TRIES){
-                        Panel.printResult(tryNum, exact, swap);
-                        Panel.printTryPinsLast(tryNum, currentTry);
+                        Panel.validateMove(tryNum, exact, swap, currentTry, false, secretKey, "");
                         tryNum++;
-                        for (int i = 0; i <KEY_LENGTH; i++)
-                            currentTry[i] = Panel.NO_COLOR;
                     }
                     else{
-                        Panel.printResult(tryNum, exact, swap);
-                        Panel.printTryPinsLast(tryNum++, currentTry);
-                        for (int i = 0; i <KEY_LENGTH; i++)
-                            currentTry[i] = Panel.NO_COLOR;
-                        Panel.printRectColors(Panel.BAR_LINE, Panel.COLS+1, MAX_COLORS+2, 3, ColorSelected, pinNum, currentTry);
-                        Panel.ValidateAttempt(secretKey);
-                        if(Panel.confirm("New game")){
-                            init();
-                        }
-                        else{
+                        Panel.validateMove(tryNum, exact, swap, currentTry, true, secretKey,"You lose");
+                        if(Panel.confirm("New game"))
+                            if(Panel.confirm("With repeated colors"))
+                                init(true);
+                            else
+                                init(false);
+                        else
                             terminate = true;
-                            break;
-                        }
                     }
                 }
+                break;
+            case KeyEvent.VK_G:
+                if(Panel.confirm("New game"))
+                    if(Panel.confirm("With repeated colors"))
+                        init(true);
+                    else
+                        init(false);
+                break;
+
 
         }
+    }
+
+    private static boolean checkCurrentColor(int[] currTry, int color, int pin){
+        boolean res = false;
+        for( int i = 0; i < currTry.length; i++)
+        {
+            if(currTry[pin] == -1 && currTry[i] != color)
+                res = true;
+            else{
+                res = false;
+                break;
+            }
+        }
+        return res;
+    }
+
+    private static boolean checkCurrentTry(int[] currTry){
+        boolean res = false;
+        for( int i = 0; i < currTry.length; i++)
+        {
+            if(currTry[i] != Panel.NO_COLOR)
+                res = true;
+            else{
+                res = false;
+                break;
+            }
+        }
+        return res;
     }
 
     private static void validateTry(){
@@ -136,5 +170,7 @@ public class MasterMind {
             }
         }
     }
+
+
 
  }

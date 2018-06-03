@@ -35,7 +35,7 @@ public class TopScore {
         Console.color(Console.BLACK, Console.LIGHT_GRAY);
         for(int i=0 ; i< size; ++i) {
             Console.cursor(LINE+2+i,COL+1);
-            Console.print( top[i].toString() );
+            Console.print( top[i].score );
         }
     }
 
@@ -83,6 +83,13 @@ public class TopScore {
         } catch (Exception e) {
             System.out.println("Error loading file " + FILE_NAME + "\n in line: " + line);
         }
+    }
+
+
+    public static void addScore(Score s){
+        size++;
+        if(size <= MAX_SCORES)
+            top[size - 1] = s;
     }
 
 }

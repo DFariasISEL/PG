@@ -170,7 +170,7 @@ public class Panel {
      * Show the secret key
      * @param secretKey Array of pin colors [0..MAX_COLORS]
      */
-    private static void showKey(int[] secretKey) {
+    public static void showKey(int[] secretKey) {
         for (int i = 0; i < KEY_LEN; i++) {
             cursor(1, NUM_SPACES + 1 + i * 2);
             color(COLORS[secretKey[i]],BLACK);
@@ -331,9 +331,15 @@ public class Panel {
         return value;
     }
 
-    public static void ValidateAttempt(int[] secretKey){
-        showKey(secretKey);
-        message("You lose");
+    public static void validateMove(int tryNum, int exact, int swap, int[] currentTry, boolean continuePlaying, int[] secretKey, String message){
+        printResult(tryNum, exact, swap);
+        printTryPinsLast(tryNum++, currentTry);
+        for (int i = 0; i <MasterMind.KEY_LENGTH; i++)
+            currentTry[i] = Panel.NO_PIN;
+        if(continuePlaying) {
+            printRectColors(Panel.BAR_LINE, Panel.COLS + 1, MasterMind.MAX_COLORS+ 2, 3, MasterMind.ColorSelected, MasterMind.pinNum, currentTry);
+            showKey(secretKey);
+            message(message);
+        }
     }
-
 }
