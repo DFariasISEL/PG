@@ -53,28 +53,28 @@ public class Panel {
      * @param width Number of columns.
      * @param color background color of rectangle to be selected.
      */
-    public static void printRectColors(int lin, int col, int height, int width, int color, int[] currentTry) {
+    public static void printRectColors(int lin, int col, int height, int width, int color, int[] currentTry, boolean keepColors) {
         setBackground(BROWN);
         for(int i=0 ; i<=height ; ++i) {
             cursor(lin + i, col);
             if(i == 0 || i == height)
                 printRepeat(' ', width);
             else
-                printRepeatWithColors(i, width, color, currentTry);
+                printRepeatWithColors(i, width, color, currentTry, keepColors);
         }
     }
 
     /**
      * Draws the basics of board. Call only once per game.
      */
-    public static void printBoard() {
+    public static void printBoard(boolean keepColors) {
         clearRect(0,0,LINES,COLS,BROWN);
         printSecretLine();
         for (int i = TRIES; i > 0; i--)
             printTryLine(i);
         //clearRect(BAR_LINE, COLS+1, MasterMind.MAX_COLORS+2, 3, BROWN);
         //To print Rect with Colors
-        printRectColors(BAR_LINE, COLS+1, MasterMind.MAX_COLORS+2, 3, NO_COLOR, MasterMind.currentTry);
+        printRectColors(BAR_LINE, COLS+1, MasterMind.MAX_COLORS+2, 3, NO_COLOR, MasterMind.currentTry, keepColors);
     }
 
     private static void printTryLine(int n) {
@@ -103,11 +103,11 @@ public class Panel {
         for (; times>0 ; times--) print(c);
     }
 
-    private static void printRepeatWithColors(int line, int times, int color, int[] currentTry) {
+    private static void printRepeatWithColors(int line, int times, int color, int[] currentTry, boolean keepColors) {
         for (; times>0 ; times--) {
             if (times == 2) {
                 setBackground((line == 1 && color == NO_COLOR) || (line == color+1) ? LIGHT_GRAY : BROWN);
-                if(isColorFilled(currentTry, line))
+                if(isColorFilled(currentTry, line, keepColors))
                 {
                     setForeground(WHITE);
                     print('O');
@@ -124,12 +124,12 @@ public class Panel {
         }
     }
 
-    public static boolean isColorFilled(int[] currentTry, int line)
-    {
+    public static boolean isColorFilled(int[] currentTry, int line, boolean keepColors){
         boolean result = false;
-        for(int i=0;i<currentTry.length;i++)
-        {
-            if(currentTry[i] != NO_COLOR && currentTry[i] == line-1) result=true;
+        if(!keepColors) {
+            for (int i = 0; i < currentTry.length; i++) {
+                if (currentTry[i] != NO_COLOR && currentTry[i] == line - 1) result = true;
+            }
         }
         return result;
     }
@@ -178,24 +178,30 @@ public class Panel {
         }
     }
 
-    public static void generateSecretKey(int[] secretKey, int maxColors){
+    public static void generateSecretKey(int[] secretKey, int maxColors, boolean eqColors){
         int i = 0, randomNum;
-        boolean result = false;
-        while(i < secretKey.length && secretKey[i] == -1){
-            randomNum = (int)(Math.random() * maxColors);
-            for(int j = 0; j< secretKey.length; j++){
-                if(secretKey[j] != randomNum)
-                    result = true;
-                else{
-                    result = false;
-                    break;
+        if(!eqColors) {
+            boolean result = false;
+            while (i < secretKey.length && secretKey[i] == -1) {
+                randomNum = (int) (Math.random() * maxColors);
+                for (int j = 0; j < secretKey.length; j++) {
+                    if (secretKey[j] != randomNum)
+                        result = true;
+                    else {
+                        result = false;
+                        break;
+                    }
+                }
+                if (result) {
+                    secretKey[i] = randomNum;
+                    i++;
                 }
             }
-            if(result){
-                secretKey[i] = randomNum;
-                i++;
-            }
+        }else{
+            for(int j = 0; j < secretKey.length; j++)
+                secretKey[j] = (int) (Math.random() * maxColors);
         }
+
 
 
 
@@ -331,13 +337,13 @@ public class Panel {
         return value;
     }
 
-    public static void validateMove(int tryNum, int exact, int swap, int[] currentTry, boolean continuePlaying, int[] secretKey, String message){
+    public static void validateMove(int tryNum, int exact, int swap, int[] currentTry, boolean continuePlaying, int[] secretKey, String message, boolean eqColors){
         printResult(tryNum, exact, swap);
         printTryPinsLast(tryNum++, currentTry);
         for (int i = 0; i <MasterMind.KEY_LENGTH; i++)
             currentTry[i] = Panel.NO_PIN;
         if(continuePlaying) {
-            printRectColors(Panel.BAR_LINE, Panel.COLS + 1, MasterMind.MAX_COLORS+ 2, 3, MasterMind.ColorSelected, currentTry);
+            printRectColors(Panel.BAR_LINE, Panel.COLS + 1, MasterMind.MAX_COLORS+ 2, 3, MasterMind.ColorSelected, currentTry, eqColors);
             showKey(secretKey);
             message(message);
         }

@@ -16,34 +16,34 @@ public class MasterMind {
     private static boolean terminate = false;
     public static int ColorSelected = 0; //Number of the current color
     private static int swap, exact;
+    private static boolean keepColors = false;
 
     public static void main(String[] args) {
         Panel.init();
         TopScore.load();
-        boolean eqColors = false;
-        init(eqColors);
+        init();
         play();
         TopScore.save();
         //Panel.message("Game terminated;Bye");
         Panel.end();
     }
 
-    private static void init(boolean eqColors) {
+    private static void init() {
         TopScore.printFrame();
         Panel.printLegend();
-        startGame(eqColors);
+        startGame();
     }
 
-    private static void startGame(boolean eqColors) {
+    private static void startGame() {
         tryNum=1;
         for (int i = 0; i <KEY_LENGTH; i++)
         {
             currentTry[i] = Panel.NO_COLOR;
             secretKey[i] = Panel.NO_COLOR;
         }
-        Panel.generateSecretKey(secretKey, MAX_COLORS);
-        Panel.printBoard();
-        Panel.printEqualColors(eqColors);
+        Panel.generateSecretKey(secretKey, MAX_COLORS, keepColors);
+        Panel.printBoard(keepColors);
+        Panel.printEqualColors(keepColors);
         TopScore.printScores();
     }
 
@@ -54,7 +54,7 @@ public class MasterMind {
             if (key>0) {
                 processKey(key);
                 Panel.printTryPins(tryNum, pinNum, currentTry);
-                Panel.printRectColors(Panel.BAR_LINE, Panel.COLS+1, MAX_COLORS+2, 3, ColorSelected, currentTry);
+                Panel.printRectColors(Panel.BAR_LINE, Panel.COLS+1, MAX_COLORS+2, 3, ColorSelected, currentTry, keepColors);
                 Console.waitKeyReleased(key);
             }
         } while( !terminate );
@@ -88,31 +88,39 @@ public class MasterMind {
                 {
                     validatePins();
                     if(exact == 4){
-                        Panel.validateMove(tryNum, exact, swap, currentTry, true, secretKey, "You win");
+                        Panel.validateMove(tryNum, exact, swap, currentTry, true, secretKey, "You win", keepColors);
                         if(TopScore.checkResult(tryNum, 5)){
                             Score s = new Score(Panel.read("Well done;The score goes to top;Enter your name", 10), tryNum, 5);
                             TopScore.addScore(s);
                             TopScore.printScores();
                         }
                         if(Panel.confirm("New game")){
-                            if(Panel.confirm("With repeated colors"))
-                                init(true);
-                            else
-                                init(false);
+                            if(Panel.confirm("With repeated colors")){
+                                keepColors = true;
+                                init();
+                            }
+                            else{
+                                keepColors = false;
+                                init();
+                            }
                         }
                         else
                             terminate = true;
                     }else if(tryNum != MAX_TRIES){
-                        Panel.validateMove(tryNum, exact, swap, currentTry, false, secretKey, "");
+                        Panel.validateMove(tryNum, exact, swap, currentTry, false, secretKey, "", keepColors);
                         tryNum++;
                     }
                     else{
-                        Panel.validateMove(tryNum, exact, swap, currentTry, true, secretKey, "You lose");
+                        Panel.validateMove(tryNum, exact, swap, currentTry, true, secretKey, "You lose", keepColors);
                         if(Panel.confirm("New game"))
-                            if(Panel.confirm("With repeated colors"))
-                                init(true);
-                            else
-                                init(false);
+                            if(Panel.confirm("With repeated colors")){
+                                keepColors = true;
+                                init();
+                            }
+                            else{
+                                keepColors = false;
+                                init();
+                            }
                         else
                             terminate = true;
                     }
@@ -120,10 +128,14 @@ public class MasterMind {
                 break;
             case KeyEvent.VK_G:
                 if(Panel.confirm("New game"))
-                    if(Panel.confirm("With repeated colors"))
-                        init(true);
-                    else
-                        init(false);
+                    if(Panel.confirm("With repeated colors")){
+                        keepColors = true;
+                        init();
+                    }
+                    else{
+                        keepColors = false;
+                        init();
+                    }
                 break;
 
 
