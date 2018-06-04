@@ -2,6 +2,8 @@ package com.isel.pg;
 
 import isel.leic.pg.Console;
 
+import javax.swing.Timer;
+
 import static isel.leic.pg.Console.*;
 
 public class Panel {
@@ -347,5 +349,14 @@ public class Panel {
             showKey(secretKey);
             message(message);
         }
+    }
+
+    public void showClock(){
+        cursor(LINES - 1 , COLS + TopScore.MAX_LINE_COLS);
+        color(WHITE, BLACK);
+        //Timer t = new Timer(1000, this);
+        //t.start();
+        print("00:00");
+
     }
 }

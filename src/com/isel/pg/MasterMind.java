@@ -144,15 +144,18 @@ public class MasterMind {
 
     private static boolean checkCurrentColor(int[] currTry, int color, int pin){
         boolean res = false;
-        for( int i = 0; i < currTry.length; i++)
-        {
-            if(currTry[pin] == -1 && currTry[i] != color)
-                res = true;
-            else{
-                res = false;
-                break;
+        if(!keepColors) {
+            for (int i = 0; i < currTry.length; i++) {
+                if (currTry[pin] == -1 && currTry[i] != color)
+                    res = true;
+                else {
+                    res = false;
+                    break;
+                }
             }
         }
+        else
+            res = true;
         return res;
     }
 
