@@ -3,6 +3,7 @@ package com.isel.pg;
 import isel.leic.pg.Console;
 
 import java.io.*;
+import java.util.Arrays;
 
 public class TopScore {
     public static final int MAX_SCORES = 8;     // Maximum of lines of score
@@ -12,6 +13,7 @@ public class TopScore {
 
     private static Score[] top = new Score[MAX_SCORES]; // Top scores stored
     private static int size = 0;    // Number of scores stored
+    private static int positionToAddInTop = 0;
 
     /**
      * Print border frame, title and header of columns (Name, Number of tries, minutes)
@@ -87,9 +89,23 @@ public class TopScore {
 
 
     public static void addScore(Score s){
-        size++;
-        if(size <= MAX_SCORES)
-            top[size - 1] = s;
+        for(int i = top.length -1; i > positionToAddInTop; i--){
+            top[i] = top[i - 1];
+        }
+        top[positionToAddInTop] = s;
+    }
+
+    public static boolean checkResult(int numTries, int minutes){
+       boolean toAdd = false;
+       positionToAddInTop = 0;
+       while(positionToAddInTop < top.length){
+           if(numTries <= top[positionToAddInTop].tries && minutes < top[positionToAddInTop].minutes){
+               toAdd = true;
+               break;
+           }
+        positionToAddInTop++;
+       }
+       return toAdd;
     }
 
 }

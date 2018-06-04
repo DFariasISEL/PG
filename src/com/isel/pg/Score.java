@@ -2,14 +2,19 @@ package com.isel.pg;
 
 public class Score {
 
-    String score;
+    String score, name;
+    int tries, minutes;
 
     public Score(String name, int tries, int minutes) {
-        score = name + " - " + tries + " " + minutes;
+        this.name = name;
+        this.tries = tries;
+        this.minutes = minutes;
+        while(name.length() < 9)
+            name = name + " ";
+        score = name + "- " + tries + "  " + minutes;
     }
 
-    public String toString()
-    {
+    public String toString(){
         return score;
     }
 

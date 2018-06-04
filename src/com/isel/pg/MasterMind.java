@@ -86,14 +86,14 @@ public class MasterMind {
             case KeyEvent.VK_ENTER:
                 if(checkCurrentTry(currentTry))
                 {
-                    validateTry();
+                    validatePins();
                     if(exact == 4){
-                        Panel.validateMove(tryNum, exact, swap, currentTry, true, secretKey, "");
-                        String name = Panel.read("Well done;The score goes to top;Enter your name", 10);
-
-                        Score s = new Score(name, tryNum, 5);
-                        TopScore.addScore(s);
-                        TopScore.printScores();
+                        Panel.validateMove(tryNum, exact, swap, currentTry, true, secretKey, "You win");
+                        if(TopScore.checkResult(tryNum, 5)){
+                            Score s = new Score(Panel.read("Well done;The score goes to top;Enter your name", 10), tryNum, 5);
+                            TopScore.addScore(s);
+                            TopScore.printScores();
+                        }
                         if(Panel.confirm("New game")){
                             if(Panel.confirm("With repeated colors"))
                                 init(true);
@@ -107,7 +107,7 @@ public class MasterMind {
                         tryNum++;
                     }
                     else{
-                        Panel.validateMove(tryNum, exact, swap, currentTry, true, secretKey,"You lose");
+                        Panel.validateMove(tryNum, exact, swap, currentTry, true, secretKey, "You lose");
                         if(Panel.confirm("New game"))
                             if(Panel.confirm("With repeated colors"))
                                 init(true);
@@ -158,7 +158,7 @@ public class MasterMind {
         return res;
     }
 
-    private static void validateTry(){
+    private static void validatePins(){
         exact = 0;
         swap = 0;
         for(int i=0; i<secretKey.length; i++){
